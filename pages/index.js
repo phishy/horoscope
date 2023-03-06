@@ -23,23 +23,6 @@ export async function getServerSideProps() {
     }),
   }).then((res) => res.json())
 
-  console.log("yo", res)
-
-  let signs = [
-    "Capricorn",
-    "Aquarius",
-    "Pisces",
-    "Aries",
-    "Taurus",
-    "Gemini",
-    "Cancer",
-    "Leo",
-    "Virgo",
-    "Libra",
-    "Scorpio",
-    "Sagittarius",
-  ]
-
   return {
     props: {
       signs,
@@ -59,9 +42,6 @@ export default function Home(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        { props.signs.map((sign) => (
-          <a href={`/${sign.toLowerCase()}`} className="p-5">{sign}</a>
-        ))}
         <h1 className="text-4xl p-5">{props.sign}</h1>
         <div className="p-5">{props.msg}</div>
       </main>
