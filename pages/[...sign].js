@@ -1,11 +1,13 @@
 import styles from "@/styles/Home.module.css"
 import { Inter } from "next/font/google"
 import Head from "next/head"
-import Image from "next/image"
 
 const inter = Inter({ subsets: ["latin"] })
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { sign } = context.query
+  let currentSign = sign[0] //capitcalize first letter
+  currentSign = currentSign.charAt(0).toUpperCase() + currentSign.slice(1)
   let res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -17,33 +19,15 @@ export async function getServerSideProps() {
       messages: [
         {
           role: "user",
-          content: "give me a horoscope for pisces without the warning",
+          content: `give me a horoscope for ${currentSign} without the warning`,
         },
       ],
     }),
   }).then((res) => res.json())
 
-  console.log("yo", res)
-
-  let signs = [
-    "Capricorn",
-    "Aquarius",
-    "Pisces",
-    "Aries",
-    "Taurus",
-    "Gemini",
-    "Cancer",
-    "Leo",
-    "Virgo",
-    "Libra",
-    "Scorpio",
-    "Sagittarius",
-  ]
-
   return {
     props: {
-      signs,
-      sign: "Pisces",
+      currentSign,
       msg: res.choices[0].message.content,
     },
   }
@@ -59,10 +43,7 @@ export default function Home(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        { props.signs.map((sign) => (
-          <a href={`/${sign.toLowerCase()}`} className="p-5">{sign}</a>
-        ))}
-        <h1 className="text-4xl p-5">{props.sign}</h1>
+        <h1 className="text-4xl p-5">{props.currentSign}</h1>
         <div className="p-5">{props.msg}</div>
       </main>
     </>
