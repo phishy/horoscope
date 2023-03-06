@@ -1,33 +1,30 @@
-import styles from "@/styles/Home.module.css"
 import { Inter } from "next/font/google"
 import Head from "next/head"
 import Image from "next/image"
+import { Button } from "antd"
+import Link from "next/link"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export async function getServerSideProps() {
-  let res = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + process.env.OPENAI_API_KEY,
-    },
-    body: JSON.stringify({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "user",
-          content: "give me a horoscope for pisces without the warning",
-        },
-      ],
-    }),
-  }).then((res) => res.json())
+  let signs = [
+    "Capricorn",
+    "Aquarius",
+    "Pisces",
+    "Aries",
+    "Taurus",
+    "Gemini",
+    "Cancer",
+    "Leo",
+    "Virgo",
+    "Libra",
+    "Scorpio",
+    "Sagittarius",
+  ]
 
   return {
     props: {
       signs,
-      sign: "Pisces",
-      msg: res.choices[0].message.content,
     },
   }
 }
@@ -41,9 +38,14 @@ export default function Home(props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <h1 className="text-4xl p-5">{props.sign}</h1>
-        <div className="p-5">{props.msg}</div>
+      <main>
+        {props.signs.map((sign) => (
+          <Link key={sign} href={`/${sign.toLowerCase()}`}>
+            <Button key={sign} style={{ marginBottom: "5px" }} block>
+              {sign}
+            </Button>
+          </Link>
+        ))}
       </main>
     </>
   )
